@@ -1,9 +1,5 @@
 const app = require("./server/server");
 
-app.listen(process.env.PORT || 4000, function() {
-  console.log(
-    "Express server listening on port %d in %s mode",
-    this.address().port,
-    app.settings.env
-  );
+app.listen(4000, () => {
+  console.log("Listening");
 });

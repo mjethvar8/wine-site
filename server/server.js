@@ -9,15 +9,18 @@ const app = express();
 
 // Replace with your mongoLab URI
 const MONGO_URI =
-  "mongodb://admin:Batman9897$@ds157762.mlab.com:57762/lyricaldb";
+  "mongodb://admin:jethva9897@ds121163.mlab.com:21163/ajs-wines";
 if (!MONGO_URI) {
   throw new Error("You must provide a MongoLab URI");
 }
 
 mongoose.Promise = global.Promise;
-mongoose.connect(MONGO_URI);
+mongoose.connect(
+  MONGO_URI,
+  { useMongoClient: true }
+);
 mongoose.connection
-  .once("openUri", () => console.log("Connected to MongoLab instance."))
+  .once("open", () => console.log("Connected to MongoLab instance."))
   .on("error", error => console.log("Error connecting to MongoLab:", error));
 
 app.use(bodyParser.json());

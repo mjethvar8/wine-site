@@ -1,32 +1,36 @@
-const mongoose = require('mongoose');
-const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLList, GraphQLID, GraphQLNonNull } = graphql;
-const SongType = require('./song_type');
-const LyricType = require('./lyric_type');
-const Lyric = mongoose.model('lyric');
-const Song = mongoose.model('song');
+const mongoose = require("mongoose");
+const graphql = require("graphql");
+const {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLBoolean
+} = graphql;
+const WineType = require("./wine_type");
+const Wine = mongoose.model("wine");
 
 const RootQuery = new GraphQLObjectType({
-  name: 'RootQueryType',
+  name: "RootQueryType",
   fields: () => ({
-    songs: {
-      type: new GraphQLList(SongType),
+    wines: {
+      type: new GraphQLList(WineType),
       resolve() {
-        return Song.find({});
+        return Wine.find({});
       }
     },
-    song: {
-      type: SongType,
+    wine: {
+      type: WineType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
       resolve(parentValue, { id }) {
-        return Song.findById(id);
+        return Wine.findById(id);
       }
     },
-    lyric: {
-      type: LyricType,
-      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve(parnetValue, { id }) {
-        return Lyric.findById(id);
+    winesOwned: {
+      type: new GraphQLList(WineType),
+      args: { owned: { type: new GraphQLNonNull(GraphQLBoolean) } },
+      resolve(parentValue, { owned }) {
+        return Wine.find({ owned });
       }
     }
   })

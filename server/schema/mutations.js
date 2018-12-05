@@ -1,45 +1,52 @@
 const graphql = require("graphql");
-const { GraphQLObjectType, GraphQLString, GraphQLID } = graphql;
+const {
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLID,
+  GraphQLBoolean,
+  GraphQLFloat
+} = graphql;
 const mongoose = require("mongoose");
-const Song = mongoose.model("song");
-const Lyric = mongoose.model("lyric");
-const SongType = require("./song_type");
-const LyricType = require("./lyric_type");
+const Wine = mongoose.model("wine");
+const WineType = require("./wine_type");
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
   fields: {
-    addSong: {
-      type: SongType,
+    addWine: {
+      type: WineType,
       args: {
-        title: { type: GraphQLString }
+        name: { type: GraphQLString }
+        // yearMade: { type: GraphQLInt },
+        // datePurchased: { type: GraphQLString },
+        // notes: { type: GraphQLString },
+        // wineType: { type: GraphQLString },
+        // price: { type: GraphQLFloat },
+        // owned: { type: GraphQLBoolean }
       },
-      resolve(parentValue, { title }) {
-        return new Song({ title }).save();
+      resolve(
+        parentValue,
+        { name /*yearMade, datePurchased, notes, wineType, owned, price*/ }
+      ) {
+        return new Wine({
+          name
+          // yearMade,
+          // datePurchased,
+          // notes,
+          // wineType,
+          // owned,
+          // price
+        }).save();
       }
     },
-    addLyricToSong: {
-      type: SongType,
+    deleteWine: {
+      type: WineType,
       args: {
-        content: { type: GraphQLString },
-        songId: { type: GraphQLID }
+        id: { type: GraphQLID }
       },
-      resolve(parentValue, { songId, content }) {
-        return Song.addLyric(songId, content);
-      }
-    },
-    likeLyric: {
-      type: LyricType,
-      args: { id: { type: GraphQLID } },
       resolve(parentValue, { id }) {
-        return Lyric.like(id);
-      }
-    },
-    deleteSong: {
-      type: SongType,
-      args: { id: { type: GraphQLID } },
-      resolve(parentValue, { id }) {
-        return Song.remove({ _id: id });
+        return Wine.remove({ _id: id });
       }
     }
   }
